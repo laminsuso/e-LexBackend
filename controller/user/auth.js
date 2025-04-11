@@ -135,10 +135,10 @@ module.exports.sendPasswordResetLinks=async(req,res)=>{
 
       
         const transporter = nodemailer.createTransport({
-            service:'gmail',
+            service: "gmail",
             auth: {
-              user: "lemightyeagle@gmail.com",
-              pass: "qnfssxhqriocmthw",
+              user: "susolamin@gmail.com",
+              pass: "rexsrzkvuuntceiq",
             },
           });
         const html = `
@@ -171,7 +171,7 @@ module.exports.sendPasswordResetLinks=async(req,res)=>{
 
                 <!-- Reset Button -->
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.BASE_URL}/changepassword/${email}" 
+                    <a href="https://e-lex-frontend.vercel.app/changepassword/${email}" 
                        style="background-color: #2d6cdf; color: #ffffff; padding: 12px 30px; 
                               text-decoration: none; border-radius: 4px; font-weight: bold;
                               display: inline-block; font-size: 16px;">
@@ -347,10 +347,10 @@ const html=`
 </html>
 `
 const transporter = nodemailer.createTransport({
-    service:'gmail',
+    service: "gmail",
     auth: {
-      user: "lemightyeagle@gmail.com",
-      pass: "qnfssxhqriocmthw",
+      user: "susolamin@gmail.com",
+      pass: "rexsrzkvuuntceiq",
     },
   });
 

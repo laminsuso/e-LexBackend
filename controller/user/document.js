@@ -407,7 +407,7 @@ module.exports.sendSignRequest = async (req, res) => {
                 <!-- OTP Display -->
                 <div style="background-color: #f8f9fa; padding: 15px; text-align: center; margin: 20px 0; border-radius: 5px;">
                     <h2 style="color: #e74c3c; margin: 0; font-size: 32px; letter-spacing: 3px;">
-                      <a href="${process.env.BASE_URL}/admin/request-signatures/sign-document/${documentId}?email=${recipient.email}" 
+                      <a href="https://e-lex-frontend.vercel.app/admin/request-signatures/sign-document/${documentId}?email=${recipient.email}" 
                            style="background-color: #2d6cdf; color: #FFFFFF; padding: 12px 24px; 
                                   text-decoration: none; border-radius: 6px; font-weight: 600;
                                   display: inline-block; font-size: 16px; transition: background-color 0.3s;">
@@ -444,7 +444,7 @@ module.exports.sendSignRequest = async (req, res) => {
         });
       }
       await transporter.sendMail({
-        from: "lemightyeagle@gmail.com",
+        from: "susolamin@gmail.com",
         to: recipient.email,
         subject: "Signature Request - E-Lex Signature™",
         html: html,
@@ -631,7 +631,7 @@ await documentModel.updateOne(
       `;
 
       const info = await transporter.sendMail({
-        from: "lemightyeagle@gmail.com",
+        from: "susolamin@gmail.com",
         to: req.user.email,
         subject: `Document "${doc.title}" has been signed by all parties`,
         html: html,
@@ -647,7 +647,7 @@ await documentModel.updateOne(
 
   if(preferences.notify_on_signatures){
     await transporter.sendMail({
-      from: "lemightyeagle@gmail.com",
+      from: "susolamin@gmail.com",
       to: doc.owner.user.email,
       subject: `Document "${doc.title}" has been signed by all parties`,
       html: html,
