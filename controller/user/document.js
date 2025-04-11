@@ -211,6 +211,7 @@ module.exports.recentSignatureRequest = async (req, res) => {
 module.exports.recentSentRequest = async (req, res) => {
   try {
     let docs = await documentModel.find({
+      owner:req.profile._id,
       status: "sent",
       draft:false
     }).populate('owner');
@@ -1012,6 +1013,7 @@ return res.status(200).json({
 module.exports.getCompletedDocs=async(req,res)=>{
   try{
     let documents = await documentModel.find({
+      owner:req.profile._id,
       status:'completed'
     }).populate({
       path: 'owner',
