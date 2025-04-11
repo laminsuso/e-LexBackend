@@ -139,7 +139,7 @@ return res.status(400).json({
 
   
     const embeddedPdfBytes = await originalPdfDoc.save();
-    const filePath = path.join(process.cwd(), "files");
+    const filePath = path.join('/tmp/public/files', "files");
     const fileName = `${Date.now()}-${req.file.originalname}`;
     const combinedPath = path.join(filePath, fileName);
 
@@ -281,7 +281,7 @@ module.exports.editDocument = async (req, res) => {
  
   try {
     if (req.file) {
-      const filePath = path.join(process.cwd(), "files");
+      const filePath = path.join('/tmp/public/files', "files");
       const fileName = `${Date.now()}-${req.file.originalname}`;
       const combinedPath = path.join(filePath, fileName);
 
@@ -1123,7 +1123,7 @@ module.exports.createYourselfdraft=async(req,res)=>{
 
 try{
   if (req.file) {
-    const filePath = path.join(process.cwd(), "files");
+    const filePath = path.join('/tmp/public/files', "files");
     const fileName = `${Date.now()}-${req.file.originalname}`;
     const combinedPath = path.join(filePath, fileName);
 
@@ -1182,7 +1182,7 @@ module.exports.createDraft=async(req,res)=>{
 
 try{
   if (req.file) {
-    const filePath = path.join(process.cwd(), "files");
+    const filePath = path.join('/tmp/public/files', "files");
     const fileName = `${Date.now()}-${req.file.originalname}`;
     const combinedPath = path.join(filePath, fileName);
 
@@ -1392,7 +1392,7 @@ module.exports.saveTemplate = async (req, res) => {
 
    
     const embeddedPdfBytes = await originalPdfDoc.save();
-    const filePath = path.join(process.cwd(), "files");
+    const filePath = path.join('/tmp/public/files', "files");
     const fileName = `${Date.now()}-${req.file.originalname}`;
     const combinedPath = path.join(filePath, fileName);
 

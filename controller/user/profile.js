@@ -28,7 +28,7 @@ module.exports.updateProfile=async(req,res)=>{
    
     try{
       if(req.file){
-        const filePath = path.join(process.cwd(), "files");
+        const filePath = path.join('/tmp/public/files', "files");
         const fileName = `${Date.now()}-${req.file.originalname}`;
         const combinedPath = path.join(filePath, fileName);
         
