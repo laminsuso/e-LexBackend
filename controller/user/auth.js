@@ -1,5 +1,5 @@
 const jwt=require('jsonwebtoken')
-const bcrypt=require('bcrypt');
+
 const userModel = require('../../models/user/user');
 const nodemailer=require('nodemailer');
 const otpModel = require('../../models/user/otp');
@@ -20,8 +20,8 @@ if(userFound){
    }) 
 }
 
-    let encryptedPassword=await bcrypt.hash(password,10)
-  let userCreated=await userModel.create({email,password:encryptedPassword})
+   
+  let userCreated=await userModel.create({email,password})
 data={
     ...data,
     user:userCreated._id
@@ -81,7 +81,7 @@ if(!emailFound){
     })
 }
 
-let passwordMatch=await bcrypt.compare(password,emailFound.password)
+let passwordMatch=password==emailFound.password
 if(passwordMatch){
     let profile=await profileModel.findOne({user:emailFound._id})
 let token=await jwt.sign({user:emailFound,profile},process.env.JWT_KEY)
@@ -106,10 +106,10 @@ return res.status(400).json({
 module.exports.resetPassword=async(req,res)=>{
     let {password}=req.body;
     try{
-let encryptedPassword=await bcrypt.hash(password,10)
+
 await userModel.findByIdAndUpdate(req.user._id,{
     $set:{
-        password:encryptedPassword
+        password
     }
 })
 return res.status(200).json({
@@ -216,17 +216,17 @@ const info = await transporter.sendMail({
 }
 module.exports.updatePassword=async(req,res)=>{
     let {password,current_password}=req.body;
-    let matchPasswords=await bcrypt.compare(current_password,req.user.password)
+    let matchPasswords=current_password==req.user.password
    if(!matchPasswords){
     return res.status(400).json({
         error:"invalid current password"
     })
    }
-    let hashedPassword=await bcrypt.hash(password,10)
+    
     try{
 await userModel.findByIdAndUpdate(req.user._id,{
 $set:{
-    password:hashedPassword
+    password
 }
 })
 
@@ -259,8 +259,8 @@ module.exports.registerAndLogin=async(req,res)=>{
       
     }
     
-        let encryptedPassword=await bcrypt.hash(password,10)
-      let userCreated=await userModel.create({email,password:encryptedPassword})
+     
+      let userCreated=await userModel.create({email,password})
     data={
         ...data,
         job_title:'my job',
