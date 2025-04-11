@@ -1,6 +1,6 @@
 const mongoose=require('mongoose')
 
-const connect=mongoose.connect(`mongodb+srv://lemightyeagle:dmlQTmtoShhBWNAb@cluster0.ybd43zy.mongodb.net/jobpost?retryWrites=true&w=majority&appName=Cluster0`)
+const connect=mongoose.connect(`mongodb+srv://dawar:dawar@cluster0.7b9t5dx.mongodb.net/`)
 
 
 module.exports=connect;
