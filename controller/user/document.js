@@ -1087,7 +1087,7 @@ return res.status(200).json({
 
 
 
-module.exports.getDocsAndProfile=async()=>{
+module.exports.getDocsAndProfile=async(req,res)=>{
   try{
     let profile=await profileModel.findOne({user:req.user._id})
     let docs=await documentModel.find({owner:profile._id})

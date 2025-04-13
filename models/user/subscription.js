@@ -38,8 +38,11 @@ type:String
 status:{
     type:String,
     default:'active'
-}
-
+},
+sessionId: {
+    type: String,
+   
+  },
 },{timestamps:true})
 
 const subscriptionModel=mongoose.model('subscription',subscriptionSchema)
