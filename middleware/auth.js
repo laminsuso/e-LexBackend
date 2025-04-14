@@ -12,13 +12,13 @@ if(req?.headers?.authorization?.startsWith('Bearer')){
 
     next()
 }else{
-    return res.status(400).json({
+    return res.status(450).json({
         error:"Invalid token"
     })
 }
     }catch(e){
    
-return res.status(400).json({
+return res.status(450).json({
     error:"Something went wrong please try again"
 })
     }

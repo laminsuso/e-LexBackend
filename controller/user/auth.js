@@ -45,9 +45,13 @@ return res.status(200).json({
 
 module.exports.googleLogin=async(req,res)=>{
     let {email}=req.body;
+    console.log(email)
         try{
     let emailFound=await userModel.findOne({email})
+    console.log('record found')
+    console.log(emailFound)
     if(!emailFound){
+        console.log('no record')
         return res.status(400).json({
             error:"Invalid email"
         })
