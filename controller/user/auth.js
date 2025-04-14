@@ -59,7 +59,11 @@ module.exports.googleLogin=async(req,res)=>{
     
     
     let profile=await profileModel.findOne({user:emailFound._id})
-    let token=await jwt.sign({user:emailFound,profile},process.env.JWT_KEY)
+
+    const userObject = emailFound.toObject(); 
+const profileObject = profile ? profile.toObject() : null;
+let token = jwt.sign({ user: userObject, profile: profileObject }, process.env.JWT_KEY);
+    
     return res.status(200).json({
         user:emailFound,
         token
