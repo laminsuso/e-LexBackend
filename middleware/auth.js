@@ -12,12 +12,9 @@ if(req?.headers?.authorization?.startsWith('Bearer')){
 
     next()
 }else{
-    let token=req?.headers?.authorization?.split(' ')[1]
-    let user=jwt.verify(token,process.env.JWT_KEY)
-    req.user=user.user
-    req.profile=user.profile
-
-  
+    return res.status(400).json({
+        error:"Invalid token"
+    })
 }
     }catch(e){
    
