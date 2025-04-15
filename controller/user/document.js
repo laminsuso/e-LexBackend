@@ -640,11 +640,11 @@ await documentModel.updateOne(
         html: html,
         attachments: [
           {
-            filename: `${doc.title}`,
-            path: doc.file,
-            contentType: "application/pdf",
-          },
-        ],
+            filename: `${doc.title}.pdf`,
+            href: doc.file, 
+            httpHeaders: { 'Content-Type': 'application/pdf' }
+          }
+        ]
       });
 
 
