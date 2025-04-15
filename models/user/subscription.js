@@ -48,9 +48,9 @@ const subscriptionModel = mongoose.model('subscription', subscriptionSchema);
 
 subscriptionModel.collection.dropIndex('sessionId_1', (err, result) => {
     if (err) {
-        console.error('Error dropping index:', err);
+        
     } else {
-        console.log('Index dropped successfully:', result);
+       
     }
 });
 
