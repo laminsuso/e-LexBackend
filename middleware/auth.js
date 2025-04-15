@@ -1,7 +1,7 @@
 const jwt=require('jsonwebtoken')
 
 module.exports.auth=async(req,res,next)=>{
-    
+   
     try{
 if(req?.headers?.authorization?.startsWith('Bearer')){
    
@@ -9,7 +9,7 @@ if(req?.headers?.authorization?.startsWith('Bearer')){
     let user=jwt.verify(token,process.env.JWT_KEY)
     req.user=user.user
     req.profile=user.profile
-
+   
     next()
 }else{
     return res.status(400).json({

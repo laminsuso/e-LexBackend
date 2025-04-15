@@ -280,6 +280,7 @@ module.exports.editDocument = async (req, res) => {
   let { docId } = req.params;
   let { ...data } = req.body;
  
+ 
   try {
     if (req.file) {
       const filePath = path.join('/tmp/public/files', "files");
@@ -308,7 +309,7 @@ module.exports.editDocument = async (req, res) => {
       message: "Document updated sucessfully",
     });
   } catch (e) {
-    
+    console.log(e.message)
     return res.status(400).json({
       error: "Something went wrong please try again",
     });
@@ -749,8 +750,10 @@ module.exports.assignEmailToRole = async (req, res) => {
 };
 module.exports.embedElementsInPDF = async (req, res) => {
   try {
-    const { documentId, elements } = req.body;
-
+    let { documentId, elements } = req.body;
+if(typeof elements=="string"){
+elements=JSON.parse(elements)
+}
     if (!documentId || !elements) {
       return res.status(400).json({ message: "Missing documentId or elements" });
     }
