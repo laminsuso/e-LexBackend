@@ -350,9 +350,10 @@ module.exports.sendSignRequest = async (req, res) => {
         error: "Max number of monthly emails reached please upgrade your plan"
       });
     }
-
+  
    
     const doc = await documentModel.findOne({ _id: documentId }).populate('owner');
+   
     const preference = await preferenceModel.findOne({ user: req.user._id });
     const transporter = nodemailer.createTransport({
       service: "gmail",
