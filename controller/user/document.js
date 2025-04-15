@@ -23,6 +23,7 @@ module.exports.saveDocument = async (req, res) => {
   try {
     let { ...data } = req.body;
 
+
     if(typeof data?.signers=="string"){
       data={
         ...data,
@@ -509,14 +510,17 @@ module.exports.getSpecificDoc = async (req, res) => {
 module.exports.signDocument = async (req, res) => {
   let { email, documentId } = req.body;
 
+console.log("Sign doc")
   try {
    let subscription=await subscriptionModel.findOne({user:req.profile._id})
    if(!subscription){
+    console.log('no subscription')
     return res.status(400).json({
       error:"You need to subscribe to sign the document"
     })
    }
    if(subscription.numberOfAvaiableSigns==0){
+    console.log('no avaiable')
     return res.status(400).json({
       error:"Monthly limit of avaiable sign reached please upgrade your plan"
     })
@@ -538,28 +542,38 @@ module.exports.signDocument = async (req, res) => {
     });
     doc = doc.toObject();
     let handled = doc.signers.find(u => u.email === email && (u.signed === true || u.declined === true));
-if(handled){
+console.log("ALREADY")
+console.log(doc)
+    if(handled){
   return res.status(400).json({
     error:"Already completed"
   })
 }
-await documentModel.updateOne(
+let newdoc=await documentModel.updateOne(
   {
     _id: documentId,
     "signers.email": email,
   },
   {
     $set: {
-      "signers.$.signed": true,
-      status:'completed'
+      "signers.$.signed": true
     },
     new: true,
   }
   
 );
+
+
     let preferences=await preferenceModel.findOne({user:doc.owner.user._id})
-    let allSigned = doc.signers.every((u) => u.signed == true);
-    if (allSigned) {
+    let filteredSigners=doc.signers.filter(u=>u.email!=email)
+
+    let allSigned = filteredSigners.every((u) => u.signed == true);
+   
+    console.log('all signed')
+    console.log(allSigned)
+console.log(filteredSigners)
+console.log(doc.signers)
+    if (allSigned || filteredSigners.length==0) {
       await documentModel.updateOne(
         {
           _id: documentId,
@@ -647,8 +661,10 @@ await documentModel.updateOne(
         ]
       });
 
-
+console.log(info)
+console.log("INFO")
   if(preferences.notify_on_signatures){
+    console.log("sending")
     await transporter.sendMail({
       from: "susolamin@gmail.com",
       to: doc.owner.user.email,
