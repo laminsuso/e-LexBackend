@@ -112,18 +112,28 @@ return res.status(400).json({
 
 
 module.exports.resetPassword=async(req,res)=>{
-    let {password}=req.body;
+    let {password,email}=req.body;
+    
     try{
 
-await userModel.findByIdAndUpdate(req.user._id,{
-    $set:{
-        password
-    }
+let userFound=await userModel.findOne({email})
+
+if(!userFound){
+return res.status(400).json({
+    error:"Email not found"
 })
+}
+        
+        await userModel.updateOne(
+            { email },  
+            { $set: { password } }  
+        );
+        
 return res.status(200).json({
     message:"Password reseted sucessfully"
 })
     }catch(e){
+        console.log(e.message)
         return res.status(400).json({
             error:"Something went wrong please try again"
         })
