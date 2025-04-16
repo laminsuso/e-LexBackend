@@ -1540,6 +1540,7 @@ module.exports.saveTemplate = async (req, res) => {
 
 module.exports.createSignTemplate=async(req,res)=>{
   let {...data}=req.body;
+ 
   delete data._id
   try{
 let doc=await documentModel.create(data)
@@ -1548,6 +1549,7 @@ return res.status(200).json({
 doc
 })
   }catch(e){
+    console.log(e.message)
 return res.status(400).json({
   error:"Something went wrong please try again"
 })
