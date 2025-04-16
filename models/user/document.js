@@ -94,6 +94,9 @@ default:false
       draftId:{
         type:String
       },
+      copyId:{
+        type:String
+      },
       time_to_complete:{
         type:Number
       }

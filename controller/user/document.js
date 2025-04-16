@@ -1,4 +1,6 @@
 const fs = require("fs");
+const { Types } = require('mongoose');
+
 const cloudinary = require("cloudinary").v2;
 const moment=require('moment')
 const { PDFDocument, rgb } = require("pdf-lib");
@@ -1055,17 +1057,39 @@ return res.status(200).json({
 
 module.exports.getInProgressDocs=async(req,res)=>{
   try{
-    let documents = await documentModel.find({
-      "signers.signed": false, 
-       owner:req.profile._id
-    
-    }).populate({
-      path: 'owner',
-      populate: {
-        path: 'user',
-        model: 'user'
-      }
-    });
+    let documents = await documentModel.aggregate([
+      {
+        $match: {
+          status:"pending", 
+          owner:new Types.ObjectId(req.profile._id)
+        }
+      },
+      { $sort: { createdAt: -1 } }, 
+      {
+        $group: {
+          _id: {
+            $cond: {
+              
+              if: { $ne: [ { $type: "$copyId" }, "missing" ] },
+              then: "$copyId", 
+              else: "$_id"      
+            }
+          },
+          latestDoc: { $first: "$$ROOT" } 
+        }
+      },
+      { $replaceRoot: { newRoot: "$latestDoc" } }, 
+      {
+        $lookup: {
+          from: "profiles",          
+          localField: "owner",        
+          foreignField: "_id",        
+          as: "owner"                 
+        }
+      },
+      { $unwind: "$owner" } 
+    ]);
+   
 return res.status(200).json({
   documents
 })
@@ -1081,17 +1105,40 @@ return res.status(200).json({
 module.exports.getNeedSignDocs=async(req,res)=>{
  
   try{
-let documents=await documentModel.find({
-  'signers.email':req.user.email,
-  'signers.signed':false,
-  
-}).populate({
-  path:'owner',
-  populate:{
-    path:'user',
-    model:'user'
-  }
-})
+    let documents = await documentModel.aggregate([
+      {
+        $match: {
+          'signers.email':req.user.email,
+          'signers.signed':false,
+        }
+      },
+      { $sort: { createdAt: -1 } },
+      {
+        $group: {
+          _id: {
+            $cond: {
+             
+              if: { $ne: [ { $type: "$copyId" }, "missing" ] },
+              then: "$copyId",  
+              else: "$_id"      
+            }
+          },
+          latestDoc: { $first: "$$ROOT" }  
+        }
+      
+      },
+      { $replaceRoot: { newRoot: "$latestDoc" } },
+      {
+        $lookup: {
+          from: "profiles",          
+          localField: "owner",        
+          foreignField: "_id",        
+          as: "owner"                 
+        }
+      },
+      { $unwind: "$owner" } 
+    ]);
+
 
 return res.status(200).json({
   documents
@@ -1262,11 +1309,38 @@ await documentModel.create(data)
 module.exports.getDrafts=async(req,res)=>{
   
 try{
-let drafts=await documentModel.find({owner:req.profile._id,draft:true}).populate('owner')
+
+  let drafts = await documentModel.aggregate([
+    {
+      $match: {
+        owner: new Types.ObjectId(req.profile._id),
+        draft: true
+      }
+    },
+    { $sort: { createdAt: -1 } },
+    {
+      $group: {
+        _id: "$draftId",
+        latestDoc: { $first: "$$ROOT" }
+      }
+    },
+    { $replaceRoot: { newRoot: "$latestDoc" } },
+    {
+      $lookup: {
+        from: "profiles",          
+        localField: "owner",        
+        foreignField: "_id",        
+        as: "owner"                 
+      }
+    },
+    { $unwind: "$owner" } 
+  ]);
+
 return res.status(200).json({
   drafts
 })
 }catch(e){
+  console.log(e.message)
   return res.status(400).json({
     error:"Something went wrong please try again"
   })
